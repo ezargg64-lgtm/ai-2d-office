@@ -1,0 +1,14 @@
+{
+  "name": "ai-office-pixel",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "npm --prefix server install && npm --prefix web install",
+    "build": "npm --prefix web run build",
+    "start": "node server/index.js",
+    "dev:server": "node --watch server/index.js",
+    "dev:web": "npm --prefix web run dev",
+    "dev": "npm run start"
+  }
+}

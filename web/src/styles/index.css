@@ -1,0 +1,137 @@
+:root {
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-sans: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #0b0f19;
+  color: #f8fafc;
+  font-family: var(--font-sans);
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Canvas container */
+#phaser-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Retro Pixel Borders */
+.pixel-box {
+  background: rgba(15, 23, 42, 0.92);
+  border: 2px solid #38bdf8;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(56, 189, 248, 0.15);
+  backdrop-filter: blur(8px);
+}
+
+.pixel-box-amber {
+  background: rgba(24, 18, 12, 0.95);
+  border: 2px solid #f59e0b;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(245, 158, 11, 0.15);
+}
+
+.pixel-box-purple {
+  background: rgba(24, 16, 42, 0.95);
+  border: 2px solid #a855f7;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(168, 85, 247, 0.15);
+}
+
+.pixel-btn {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  background: #1e293b;
+  color: #f8fafc;
+  border: 2px solid #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pixel-btn:hover {
+  background: #334155;
+  border-color: #38bdf8;
+  color: #38bdf8;
+  transform: translateY(-1px);
+}
+
+.pixel-btn:active {
+  transform: translateY(1px);
+}
+
+.pixel-btn-primary {
+  background: #0284c7;
+  border-color: #38bdf8;
+  color: #ffffff;
+}
+
+.pixel-btn-primary:hover {
+  background: #0369a1;
+  border-color: #7dd3fc;
+  color: #ffffff;
+}
+
+.pixel-btn-meeting {
+  background: #7e22ce;
+  border-color: #c084fc;
+  color: #ffffff;
+}
+
+.pixel-btn-meeting:hover {
+  background: #6b21a8;
+  border-color: #e9d5ff;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #38bdf8;
+}
+
+/* Keyframe animations */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(0.98); }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s infinite ease-in-out;
+}
