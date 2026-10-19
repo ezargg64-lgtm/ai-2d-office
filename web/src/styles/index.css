@@ -100,6 +100,18 @@ canvas {
   color: #ffffff;
 }
 
+.pixel-btn-amber {
+  background: #B45309;
+  border-color: #F59E0B;
+  color: #FFFFFF;
+}
+
+.pixel-btn-amber:hover {
+  background: #D97706;
+  border-color: #FEF08A;
+  color: #FFFFFF;
+}
+
 .pixel-btn-meeting {
   background: #7e22ce;
   border-color: #c084fc;

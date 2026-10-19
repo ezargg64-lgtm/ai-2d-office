@@ -9,6 +9,9 @@ import { Deliverables } from './components/Deliverables';
 import { MiniMap } from './components/MiniMap';
 import { MobileControls } from './components/MobileControls';
 import { SettingsModal } from './components/SettingsModal';
+import { ArcadeModal } from './components/ArcadeModal';
+import { CafeModal } from './components/CafeModal';
+import { ServerTerminalModal } from './components/ServerTerminalModal';
 
 export const App: React.FC = () => {
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -18,6 +21,10 @@ export const App: React.FC = () => {
   const [activeChatAgent, setActiveChatAgent] = useState<Agent | null>(null);
   const [isMeetingOpen, setIsMeetingOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isArcadeOpen, setIsArcadeOpen] = useState(false);
+  const [isCafeOpen, setIsCafeOpen] = useState(false);
+  const [isTerminalOpen, setIsTerminalOpen] = useState(false);
+
   const [deliverables, setDeliverables] = useState<Deliverable[]>([]);
   const [energy, setEnergy] = useState(95);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -37,7 +44,7 @@ export const App: React.FC = () => {
     };
   }, []);
 
-  // Fetch initial data
+  // Fetch initial data & register gameplay events
   useEffect(() => {
     loadAgents();
     loadDeliverables();
@@ -59,12 +66,24 @@ export const App: React.FC = () => {
       setIsMeetingOpen(true);
     });
 
-    const unsubCafe = eventBus.on('interact:cafe', () => {
-      setEnergy(prev => Math.min(100, prev + 5));
-      triggerToast('☕ Poured artisanal espresso! Energy restored (+5%)');
+    const unsubCafe = eventBus.on('open:cafe', () => {
+      setIsCafeOpen(true);
     });
 
-    // Lightweight 3-second simulation state polling for mobile optimization
+    const unsubArcade = eventBus.on('open:arcade', () => {
+      setIsArcadeOpen(true);
+    });
+
+    const unsubTerminal = eventBus.on('open:terminal', () => {
+      setIsTerminalOpen(true);
+    });
+
+    const unsubPet = eventBus.on('pet:corgi', () => {
+      triggerToast('🐶 You petted Pixel the Corgi! Tail wagging & team morale boosted! ❤️');
+      setEnergy(prev => Math.min(100, prev + 5));
+    });
+
+    // 3-second simulation state polling
     const pollInterval = setInterval(() => {
       pollSimulationState();
     }, 3000);
@@ -73,6 +92,9 @@ export const App: React.FC = () => {
       unsubAgent();
       unsubMeeting();
       unsubCafe();
+      unsubArcade();
+      unsubTerminal();
+      unsubPet();
       clearInterval(pollInterval);
     };
   }, []);
@@ -127,6 +149,16 @@ export const App: React.FC = () => {
     setTimeout(() => setToastMessage(null), 3500);
   };
 
+  const handleBrewCoffee = (_type: string, energyGain: number, speedBuff?: number, toastMsg?: string) => {
+    setEnergy(prev => Math.min(100, prev + energyGain));
+    if (speedBuff) {
+      eventBus.emit('buff:speed', speedBuff);
+    }
+    if (toastMsg) {
+      triggerToast(toastMsg);
+    }
+  };
+
   const handleUpdateAgent = (updated: Agent) => {
     setAgents(prev => prev.map(a => (a.id === updated.id ? updated : a)));
     if (activeChatAgent?.id === updated.id) {
@@ -149,7 +181,7 @@ export const App: React.FC = () => {
         energy={energy}
       />
 
-      {/* 3. 2D MiniMap Radar */}
+      {/* 3. Warm Radar MiniMap */}
       <MiniMap />
 
       {/* 4. Task Deliverables Pill */}
@@ -179,22 +211,37 @@ export const App: React.FC = () => {
         />
       )}
 
-      {/* 8. Global Floating Toast */}
+      {/* 8. Playable Vintage Arcade Machine Modal */}
+      {isArcadeOpen && (
+        <ArcadeModal onClose={() => setIsArcadeOpen(false)} />
+      )}
+
+      {/* 9. Artisanal Coffee Bar Barista Modal */}
+      {isCafeOpen && (
+        <CafeModal onClose={() => setIsCafeOpen(false)} onBrew={handleBrewCoffee} />
+      )}
+
+      {/* 10. DevOps Server Terminal Modal */}
+      {isTerminalOpen && (
+        <ServerTerminalModal onClose={() => setIsTerminalOpen(false)} />
+      )}
+
+      {/* 11. Global Floating Toast */}
       {toastMessage && (
         <div
-          className="pixel-box animate-pulse-subtle"
+          className="pixel-box-amber animate-pulse-subtle"
           style={{
             position: 'absolute',
             bottom: 84,
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 60,
-            padding: '8px 16px',
-            borderRadius: 6,
+            padding: '10px 18px',
+            borderRadius: 8,
             fontSize: 12,
-            color: '#38BDF8',
+            color: '#FDE68A',
             pointerEvents: 'none',
-            boxShadow: '0 8px 30px rgba(0,0,0,0.8)'
+            boxShadow: '0 8px 30px rgba(0,0,0,0.85)'
           }}
         >
           {toastMessage}
